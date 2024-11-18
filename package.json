@@ -1,0 +1,30 @@
+{
+  "name": "tacticalmaprenderer",
+  "author": "Faareoh",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "commonjs",
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "files": [
+    "dist/**/*",
+    "assets/**/*"
+  ],
+  "dependencies": {
+    "canvas": "^2.11.2"
+  },
+  "keywords": [
+    "dofus",
+    "dofus3"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/E-bou/TacticalMapRenderer.git"
+  },
+  "license": "ISC"
+}
