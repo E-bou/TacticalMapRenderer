@@ -31,7 +31,7 @@ function generate(assetPath) {
     });
 }
 if (process.argv.length < 3) {
-    console.error('Usage: node run dist/cli.js <assetPath>');
+    console.error('Usage: node dist/cli.js <assetPath>');
     process.exit(1);
 }
 const assetPath = process.argv[2];

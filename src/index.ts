@@ -92,7 +92,7 @@ class TacticalMapRenderer {
         ctx.drawImage(asset, x, y, Constants.CELL_WIDTH, Constants.CELL_HEIGHT);
       }
 
-      if (!cell.los) {
+      if (!cell.los && !cell.nonWalkableDuringFight) {
         ctx.drawImage(assets.high, x, y + Constants.CELL_OFFSET, Constants.CELL_WIDTH, Constants.CELL_DOUBLE_HEIGHT);
       }
 

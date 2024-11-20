@@ -81,7 +81,7 @@ class TacticalMapRenderer {
                     const asset = cellCoords.y % 2 === 0 ? assets.gray : assets.purple;
                     ctx.drawImage(asset, x, y, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_HEIGHT);
                 }
-                if (!cell.los) {
+                if (!cell.los && !cell.nonWalkableDuringFight) {
                     ctx.drawImage(assets.high, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
                 }
                 if (this.options.displayStartCells) {
