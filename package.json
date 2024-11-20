@@ -26,5 +26,8 @@
     "type": "git",
     "url": "git+https://github.com/E-bou/TacticalMapRenderer.git"
   },
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.9.1"
+  }
 }
