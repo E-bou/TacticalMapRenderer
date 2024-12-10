@@ -76,7 +76,7 @@ class TacticalMapRenderer {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
 
-    for (const cell of this.map.cellsData) {
+    for (const cell of this.map.mapData.cellsData) {
       const cellId = cell.cellNumber;
 
       const cellCoords = {

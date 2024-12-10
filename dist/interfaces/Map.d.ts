@@ -3,11 +3,13 @@ export interface Map {
     m_Enabled: number;
     m_Script: MGameObject;
     m_Name: string;
-    topNeighbourId: number;
-    bottomNeighbourId: number;
-    leftNeighbourId: number;
-    rightNeighbourId: number;
-    cellsData: CellsData[];
+    mapData: {
+        topNeighbourId: number;
+        bottomNeighbourId: number;
+        leftNeighbourId: number;
+        rightNeighbourId: number;
+        cellsData: CellsData[];
+    };
 }
 export interface MGameObject {
     m_FileID: number;
