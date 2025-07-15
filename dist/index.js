@@ -103,7 +103,7 @@ class TacticalMapRenderer {
                     ctx.drawImage(assets.enemy, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
                     cellNeedToBeDraw = true;
                 }
-                if (cellNeedToBeDraw) {
+                if (this.options.displayCellId && cellNeedToBeDraw) {
                     ctx.fillStyle = 'white';
                     ctx.font = '12px Arial';
                     ctx.textAlign = 'center';

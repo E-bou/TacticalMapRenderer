@@ -119,7 +119,7 @@ class TacticalMapRenderer {
         cellNeedToBeDraw = true;
       }
 
-      if (cellNeedToBeDraw) {
+      if (this.options.displayCellId && cellNeedToBeDraw) {
         ctx.fillStyle = 'white';
         ctx.font = '12px Arial';
         ctx.textAlign = 'center';
