@@ -86,20 +86,24 @@ class TacticalMapRenderer {
                 };
                 const x = (cellId % Map_1.Constants.MAP_WIDTH) * Map_1.Constants.CELL_WIDTH + (Math.floor(cellId / Map_1.Constants.MAP_WIDTH) % 2) * Map_1.Constants.CELL_HALF_WIDTH;
                 const y = Math.floor(cellId / Map_1.Constants.MAP_WIDTH) * Map_1.Constants.CELL_HALF_HEIGHT;
+                let cellNeedToBeDraw = false;
                 if (cell.mov && !cell.nonWalkableDuringFight) {
                     const asset = cellCoords.y % 2 === 0 ? assets.gray : assets.purple;
                     ctx.drawImage(asset, x, y, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_HEIGHT);
+                    cellNeedToBeDraw = true;
                 }
                 if (!cell.los && !cell.nonWalkableDuringFight) {
                     ctx.drawImage(assets.high, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
                 }
                 if (cell.blue && assets.ally && this.options.displayStartCells) {
                     ctx.drawImage(assets.ally, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
+                    cellNeedToBeDraw = true;
                 }
                 if (cell.red && assets.enemy && this.options.displayStartCells) {
                     ctx.drawImage(assets.enemy, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
+                    cellNeedToBeDraw = true;
                 }
-                if (this.options.displayCellId && cell.linkedZone) {
+                if (cellNeedToBeDraw) {
                     ctx.fillStyle = 'white';
                     ctx.font = '12px Arial';
                     ctx.textAlign = 'center';

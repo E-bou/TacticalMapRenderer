@@ -97,9 +97,12 @@ class TacticalMapRenderer {
       const x = (cellId % Constants.MAP_WIDTH) * Constants.CELL_WIDTH + (Math.floor(cellId / Constants.MAP_WIDTH) % 2) * Constants.CELL_HALF_WIDTH;
       const y = Math.floor(cellId / Constants.MAP_WIDTH) * Constants.CELL_HALF_HEIGHT;
 
+      let cellNeedToBeDraw = false;
+
       if (cell.mov && !cell.nonWalkableDuringFight) {
         const asset = cellCoords.y % 2 === 0 ? assets.gray : assets.purple;
         ctx.drawImage(asset, x, y, Constants.CELL_WIDTH, Constants.CELL_HEIGHT);
+        cellNeedToBeDraw = true;
       }
 
       if (!cell.los && !cell.nonWalkableDuringFight) {
@@ -108,13 +111,15 @@ class TacticalMapRenderer {
 
       if (cell.blue && assets.ally && this.options.displayStartCells) {
         ctx.drawImage(assets.ally, x, y + Constants.CELL_OFFSET, Constants.CELL_WIDTH, Constants.CELL_DOUBLE_HEIGHT);
+        cellNeedToBeDraw = true;
       }
 
       if (cell.red && assets.enemy && this.options.displayStartCells) {
         ctx.drawImage(assets.enemy, x, y + Constants.CELL_OFFSET, Constants.CELL_WIDTH, Constants.CELL_DOUBLE_HEIGHT);
+        cellNeedToBeDraw = true;
       }
 
-      if (this.options.displayCellId && cell.linkedZone) {
+      if (cellNeedToBeDraw) {
         ctx.fillStyle = 'white';
         ctx.font = '12px Arial';
         ctx.textAlign = 'center';
