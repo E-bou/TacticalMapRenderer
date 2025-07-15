@@ -21,11 +21,11 @@ function generate(assetPath) {
             process.exit(1);
         }
         const mapData = JSON.parse(fs_1.default.readFileSync(assetPath, 'utf8'));
-        if (!mapData || !mapData.cellsData || !mapData.cellsData.length) {
+        if (!mapData || !mapData.mapData.cellsData || !mapData.mapData.cellsData.length) {
             console.error('Invalid map data.');
             process.exit(1);
         }
-        const renderer = new _1.TacticalMapRenderer(mapData, { displayStartCells: true, addWatermark: true, assetPath: './assets' });
+        const renderer = new _1.TacticalMapRenderer(mapData, { displayStartCells: true, addWatermark: true, assetPath: './assets', displayCellId: true });
         const buffer = yield renderer.render();
         fs_1.default.writeFileSync('output.png', buffer);
     });

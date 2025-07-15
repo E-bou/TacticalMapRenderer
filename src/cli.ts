@@ -9,12 +9,12 @@ async function generate(assetPath: string): Promise<void> {
 
   const mapData = JSON.parse(fs.readFileSync(assetPath, 'utf8'));
 
-  if (!mapData || !mapData.cellsData || !mapData.cellsData.length) {
+  if (!mapData || !mapData.mapData.cellsData || !mapData.mapData.cellsData.length) {
     console.error('Invalid map data.');
     process.exit(1);
   }
 
-  const renderer = new TacticalMapRenderer(mapData, { displayStartCells: true, addWatermark: true, assetPath: './assets' });
+  const renderer = new TacticalMapRenderer(mapData, { displayStartCells: true, addWatermark: true, assetPath: './assets', displayCellId: true });
   const buffer = await renderer.render();
   fs.writeFileSync('output.png', buffer);
 }

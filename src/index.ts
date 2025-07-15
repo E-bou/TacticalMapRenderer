@@ -2,6 +2,8 @@ import canvas from 'canvas';
 import { Constants, Map } from './interfaces/Map';
 import Options from './interfaces/Options';
 
+const assetsCache: Record<string, canvas.Image> = {};
+
 class TacticalMapRenderer {
   private readonly map: Map;
 
@@ -26,8 +28,6 @@ class TacticalMapRenderer {
     enemy?: canvas.Image,
     logo?: canvas.Image,
   }> {
-    const promises: Promise<canvas.Image>[] = [];
-
     const assets: Record<string, string> = {
       high: 'areaUnitHigh',
       gray: 'grayCell',
@@ -43,17 +43,27 @@ class TacticalMapRenderer {
       assets.logo = 'E-bou';
     }
 
-    for (const [, value] of Object.entries(assets)) {
-      promises.push(canvas.loadImage(`${this.options.assetPath}/${value}.png`));
+    const loadedAssets: Record<string, canvas.Image> = {};
+
+    for (const [key, value] of Object.entries(assets)) {
+      const assetPath = `${this.options.assetPath}/${value}.png`;
+
+      if (assetsCache[assetPath]) {
+        loadedAssets[key] = assetsCache[assetPath];
+      } else {
+        const image = await canvas.loadImage(assetPath);
+        assetsCache[assetPath] = image;
+        loadedAssets[key] = image;
+      }
     }
 
     return {
-      high: await promises[0],
-      gray: await promises[1],
-      purple: await promises[2],
-      ally: await promises[3],
-      enemy: await promises[4],
-      logo: await promises[5],
+      high: loadedAssets.high,
+      gray: loadedAssets.gray,
+      purple: loadedAssets.purple,
+      ally: loadedAssets.ally,
+      enemy: loadedAssets.enemy,
+      logo: loadedAssets.logo,
     };
   }
 
@@ -96,15 +106,24 @@ class TacticalMapRenderer {
         ctx.drawImage(assets.high, x, y + Constants.CELL_OFFSET, Constants.CELL_WIDTH, Constants.CELL_DOUBLE_HEIGHT);
       }
 
+      if (cell.blue && assets.ally && this.options.displayStartCells) {
+        ctx.drawImage(assets.ally, x, y + Constants.CELL_OFFSET, Constants.CELL_WIDTH, Constants.CELL_DOUBLE_HEIGHT);
+      }
 
-      if (this.options.displayStartCells) {
-        if (cell.blue && assets.ally) {
-          ctx.drawImage(assets.ally, x, y + Constants.CELL_OFFSET, Constants.CELL_WIDTH, Constants.CELL_DOUBLE_HEIGHT);
-        }
+      if (cell.red && assets.enemy && this.options.displayStartCells) {
+        ctx.drawImage(assets.enemy, x, y + Constants.CELL_OFFSET, Constants.CELL_WIDTH, Constants.CELL_DOUBLE_HEIGHT);
+      }
 
-        if (cell.red && assets.enemy) {
-          ctx.drawImage(assets.enemy, x, y + Constants.CELL_OFFSET, Constants.CELL_WIDTH, Constants.CELL_DOUBLE_HEIGHT);
-        }
+      if (this.options.displayCellId && cell.linkedZone) {
+        ctx.fillStyle = 'white';
+        ctx.font = '12px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(
+          cellId.toString(),
+          x + Constants.CELL_WIDTH / 2,
+          y + Constants.CELL_HEIGHT / 2
+        );
       }
     }
 

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TacticalMapRenderer = void 0;
 const canvas_1 = __importDefault(require("canvas"));
 const Map_1 = require("./interfaces/Map");
+const assetsCache = {};
 class TacticalMapRenderer {
     /**
      * Creates an instance of the TacticalMapRenderer.
@@ -28,7 +29,6 @@ class TacticalMapRenderer {
     }
     loadAssets() {
         return __awaiter(this, void 0, void 0, function* () {
-            const promises = [];
             const assets = {
                 high: 'areaUnitHigh',
                 gray: 'grayCell',
@@ -41,16 +41,25 @@ class TacticalMapRenderer {
             if (this.options.addWatermark) {
                 assets.logo = 'E-bou';
             }
-            for (const [, value] of Object.entries(assets)) {
-                promises.push(canvas_1.default.loadImage(`${this.options.assetPath}/${value}.png`));
+            const loadedAssets = {};
+            for (const [key, value] of Object.entries(assets)) {
+                const assetPath = `${this.options.assetPath}/${value}.png`;
+                if (assetsCache[assetPath]) {
+                    loadedAssets[key] = assetsCache[assetPath];
+                }
+                else {
+                    const image = yield canvas_1.default.loadImage(assetPath);
+                    assetsCache[assetPath] = image;
+                    loadedAssets[key] = image;
+                }
             }
             return {
-                high: yield promises[0],
-                gray: yield promises[1],
-                purple: yield promises[2],
-                ally: yield promises[3],
-                enemy: yield promises[4],
-                logo: yield promises[5],
+                high: loadedAssets.high,
+                gray: loadedAssets.gray,
+                purple: loadedAssets.purple,
+                ally: loadedAssets.ally,
+                enemy: loadedAssets.enemy,
+                logo: loadedAssets.logo,
             };
         });
     }
@@ -84,13 +93,18 @@ class TacticalMapRenderer {
                 if (!cell.los && !cell.nonWalkableDuringFight) {
                     ctx.drawImage(assets.high, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
                 }
-                if (this.options.displayStartCells) {
-                    if (cell.blue && assets.ally) {
-                        ctx.drawImage(assets.ally, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
-                    }
-                    if (cell.red && assets.enemy) {
-                        ctx.drawImage(assets.enemy, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
-                    }
+                if (cell.blue && assets.ally && this.options.displayStartCells) {
+                    ctx.drawImage(assets.ally, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
+                }
+                if (cell.red && assets.enemy && this.options.displayStartCells) {
+                    ctx.drawImage(assets.enemy, x, y + Map_1.Constants.CELL_OFFSET, Map_1.Constants.CELL_WIDTH, Map_1.Constants.CELL_DOUBLE_HEIGHT);
+                }
+                if (this.options.displayCellId && cell.linkedZone) {
+                    ctx.fillStyle = 'white';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(cellId.toString(), x + Map_1.Constants.CELL_WIDTH / 2, y + Map_1.Constants.CELL_HEIGHT / 2);
                 }
             }
             if (this.options.addWatermark && assets.logo) {

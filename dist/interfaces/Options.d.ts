@@ -13,4 +13,8 @@ export default interface Options {
      * If it's installed as a package, it should be "./node_modules/tacticalmaprenderer/assets"
      */
     assetPath: string;
+    /**
+     * Whether to display the cell IDs on the map.
+     */
+    displayCellId: boolean;
 }
