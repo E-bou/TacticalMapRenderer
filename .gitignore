@@ -174,3 +174,4 @@ out
 .DS_Store
 
 package-lock.json
+bun.lock
